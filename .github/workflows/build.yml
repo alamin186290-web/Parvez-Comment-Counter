@@ -1,3 +1,4 @@
+
 name: Build Parvez Comment Counter
 
 on:
@@ -28,8 +29,18 @@ jobs:
       - name: Setup Android SDK
         uses: android-actions/setup-android@v3
 
+      - name: Extract Complete Source
+        run: |
+          unzip -q Parvez-Comment-Counter-Complete-Source.zip -d /tmp/pc-source
+          cp -R /tmp/pc-source/Parvez-Comment-Counter/. .
+          rm -f Parvez-Comment-Counter-Complete-Source.zip
+
+      - name: Install Android SDK packages
+        run: |
+          sdkmanager --install "platforms;android-35" "build-tools;35.0.0"
+
       - name: Build APK
-        run: gradle assembleDebug
+        run: gradle assembleDebug --stacktrace
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
